@@ -25,43 +25,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Validasi password satu per satu dengan pesan lucu
-    if (password.length < 8) {
-      _showFunnySnackBar("Password harus terdiri dari minimal 8 karakter.");
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    if (!password.contains(RegExp(r'[A-Z]'))) {
-      _showFunnySnackBar(
-        "Password harus mengandung setidaknya satu huruf kapital.",
-      );
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    if (!password.contains(RegExp(r'[a-z]'))) {
-      _showFunnySnackBar(
-        "Password harus mengandung setidaknya satu huruf kecil.",
-      );
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    if (!password.contains(RegExp(r'\d'))) {
-      _showFunnySnackBar("Password harus mengandung setidaknya satu angka.");
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      _showFunnySnackBar(
-        "Password harus mengandung setidaknya satu simbol khusus.",
-      );
-      setState(() => _isLoading = false);
-      return;
-    }
-
     try {
       final response = await AuthService().register(
         name: name,
@@ -69,25 +32,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: password,
       );
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("🎉 ${response.message}")));
+      if (response.message != null && response.message!.isNotEmpty) {
+        _showElegantSnackBar(response.message!);
+      }
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => LoginScreen()),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("❌ Gagal registrasi: $e")));
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      if (errorMessage.isNotEmpty) {
+        _showElegantSnackBar(errorMessage);
+      }
     } finally {
       setState(() => _isLoading = false);
     }
   }
 
-  // Helper snack bar dengan emoji & gaya lucu
-  void _showFunnySnackBar(String message) {
+  // Helper untuk menampilkan SnackBar dengan gaya elegan
+  void _showElegantSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

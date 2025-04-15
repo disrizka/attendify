@@ -1,3 +1,4 @@
+import 'package:attendify/pages/check-in/screens/checkin_screen.dart';
 import 'package:attendify/pages/history/screens/history_screen.dart';
 import 'package:attendify/utils/constant/app_color.dart';
 import 'package:attendify/utils/constant/app_font.dart';
@@ -152,7 +153,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckinScreen(),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.secondaryColor,
                           shape: RoundedRectangleBorder(

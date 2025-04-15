@@ -1,3 +1,3 @@
 class Endpoint {
-  static const String baseUrlApi = 'https://absen.quidi.id/api';
+  static const String baseUrlApi = 'https://absen.quidi.id';
 }

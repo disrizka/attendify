@@ -5,6 +5,7 @@ import 'package:attendify/pages/auth/screens/register/screen/register_screen.dar
 import 'package:attendify/utils/constant/app_color.dart';
 import 'package:attendify/utils/constant/app_font.dart';
 import 'package:attendify/utils/constant/app_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -48,16 +49,22 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
 
-      _showElegantSnackBar(response.message);
+      // Simpan token ke SharedPreferences
+      if (response.data?.token != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', response.data!.token!);
+      }
+
+      // Tampilkan message dari response API
+      _showElegantSnackBar(response.message ?? "Login berhasil.");
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => BottomBar()),
       );
     } catch (e) {
-      _showElegantSnackBar(
-        "Login gagal. Periksa kembali email dan password Anda.",
-      );
+      print(e);
+      _showElegantSnackBar(e.toString().replaceAll("Exception: ", ""));
     } finally {
       setState(() => _isLoading = false);
     }

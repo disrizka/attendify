@@ -11,7 +11,7 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${Endpoint.baseUrlApi}/register'),
+      Uri.parse('${Endpoint.baseUrlApi}/api/register'),
       headers: {'Accept': 'application/json'},
       body: {'name': name, 'email': email, 'password': password},
     );
@@ -30,11 +30,11 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${Endpoint.baseUrlApi}/login'),
+      Uri.parse('${Endpoint.baseUrlApi}/api/login'),
       headers: {'Accept': 'application/json'},
       body: {'email': email, 'password': password},
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       return LoginResponse.fromJson(jsonDecode(response.body));
     } else {
