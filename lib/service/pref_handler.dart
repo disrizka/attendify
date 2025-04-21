@@ -6,11 +6,9 @@ class PreferenceHandler {
   static const String _token = 'token';
 
   // For saving user id
-  static void saveId(String id) {
-    print('id: $id');
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(_id, id);
-    });
+  static Future<void> saveId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_id, id);
   }
 
   static void saveLookWelcoming(bool look) {
@@ -21,18 +19,20 @@ class PreferenceHandler {
   }
 
   // For saving token
-  static void saveToken(String token) {
-    print('token: $token');
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(_token, token);
-    });
+  static Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_token, token);
+  }
+
+  static Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_token);
   }
 
   //For getting user id
-  static Future getId() async {
+  static Future<int?> getId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String id = prefs.getString(_id) ?? '';
-    return id;
+    return prefs.getInt(_id); // ✅ BUKAN getString()
   }
 
   //For getting look welcoming
@@ -43,17 +43,14 @@ class PreferenceHandler {
   }
 
   // For removing user id
-  static void removeId() {
-    SharedPreferences.getInstance().then((prefs) {
-      // prefs.remove(_id);
-      prefs.clear();
-    });
+  static Future<void> removeId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_id);
   }
 
   // For removing token
-  static void removeToken() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.remove(_token);
-    });
+  static Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_token);
   }
 }

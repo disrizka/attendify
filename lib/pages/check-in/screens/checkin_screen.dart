@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:attendify/pages/auth/service/auth_service.dart';
 import 'package:attendify/service/geo_service.dart';
+
+import 'package:attendify/service/pref_handler.dart';
+
 import 'package:attendify/utils/constant/app_color.dart';
 import 'package:attendify/utils/constant/app_font.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +28,6 @@ class _CheckinScreenState extends State<CheckinScreen> {
   String _currentAddress = "Unknown";
   double _currentLat = 0;
   double _currentLong = 0;
-  String _note = "";
 
   @override
   void initState() {
@@ -71,6 +74,43 @@ class _CheckinScreenState extends State<CheckinScreen> {
     await _geolocatorPlatform.openLocationSettings();
   }
 
+  Future<void> _handleCheckin() async {
+    final userId = await PreferenceHandler.getId();
+    final token = await PreferenceHandler.getToken();
+    print("User ID dari session: $userId");
+    if (userId == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("User belum login")));
+      return;
+    }
+
+    try {
+      final response = await AuthService().checkin(
+        lat: _currentLat,
+        lng: _currentLong,
+        address: _currentAddress,
+        token: token,
+      );
+
+      print("RESPON DARI API: $response");
+      final message = response['message'] ?? "Check-in gagal";
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+
+      if (message.toLowerCase().contains("berhasil")) {
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      print("EXCEPTION: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceAll("Exception: ", ""))),
+      );
+    }
+  }
+
   PopupMenuButton _createActions() {
     return PopupMenuButton(
       elevation: 40,
@@ -93,6 +133,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.backgroundColor,
       body:
           _isLoading
               ? const Center(child: CircularProgressIndicator())
@@ -120,7 +161,6 @@ class _CheckinScreenState extends State<CheckinScreen> {
                     },
                   ),
 
-                  // FAB Kiri (Back)
                   Positioned(
                     top: MediaQuery.of(context).padding.top + 16,
                     left: 16,
@@ -131,8 +171,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         heroTag: "fab_back",
                         onPressed: () => Navigator.pop(context),
                         backgroundColor: AppColor.primaryColor,
-                        shape:
-                            const CircleBorder(), // memastikan bentuknya lingkaran
+                        shape: const CircleBorder(),
                         child: Icon(
                           Icons.arrow_back,
                           color: AppColor.backgroundColor,
@@ -151,7 +190,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         heroTag: "fab_refresh",
                         onPressed: _fetchLocation,
                         backgroundColor: AppColor.primaryColor,
-                        shape: CircleBorder(),
+                        shape: const CircleBorder(),
                         child: Icon(
                           Icons.my_location,
                           color: AppColor.backgroundColor,
@@ -160,7 +199,6 @@ class _CheckinScreenState extends State<CheckinScreen> {
                     ),
                   ),
 
-                  // Bottom Panel
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -199,7 +237,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                             children: [
                               const Icon(
                                 Icons.location_pin,
-                                color: Colors.orange,
+                                color: AppColor.primaryColor,
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -212,20 +250,6 @@ class _CheckinScreenState extends State<CheckinScreen> {
                                 ),
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 16),
-                          TextField(
-                            onChanged: (val) => _note = val,
-                            decoration: InputDecoration(
-                              hintText: "Note (optional)",
-                              filled: true,
-                              fillColor: Colors.grey[100],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            maxLines: 2,
                           ),
                           const SizedBox(height: 20),
                           SizedBox(
@@ -240,11 +264,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              onPressed: () {
-                                // TODO: Save check-in data
-                                print("Check-In with note: $_note");
-                                print("Location: $_currentAddress");
-                              },
+                              onPressed: _handleCheckin,
                               child: Text(
                                 "Go",
                                 style: PoppinsTextStyle.semiBold.copyWith(

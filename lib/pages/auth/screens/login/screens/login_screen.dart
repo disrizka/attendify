@@ -1,11 +1,11 @@
 import 'package:attendify/pages/auth/service/auth_service.dart';
+import 'package:attendify/service/pref_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:attendify/pages/main/screens/bottom_navigation_bar.dart';
 import 'package:attendify/pages/auth/screens/register/screen/register_screen.dart';
 import 'package:attendify/utils/constant/app_color.dart';
 import 'package:attendify/utils/constant/app_font.dart';
 import 'package:attendify/utils/constant/app_image.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
@@ -49,13 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
 
-      // Simpan token ke SharedPreferences
       if (response.data?.token != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', response.data!.token!);
+        await PreferenceHandler.saveToken(response.data!.token!);
+      }
+      if (response.data?.user?.id != null) {
+        await PreferenceHandler.saveId(response.data!.user!.id!);
+        print("\u2705 User ID disimpan: \${response.data!.user!.id!}");
       }
 
-      // Tampilkan message dari response API
       _showElegantSnackBar(response.message ?? "Login berhasil.");
 
       Navigator.pushReplacement(
@@ -135,14 +137,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 30),
                   TextField(
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: "Password",
                       hintStyle: PoppinsTextStyle.regular.copyWith(
                         color: Colors.grey[600],
                         fontSize: 13,
                       ),
-                      suffixIcon: Icon(Icons.visibility),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                       filled: true,
                       fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
@@ -151,6 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 70),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

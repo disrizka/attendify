@@ -17,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _handleRegister() async {
     setState(() => _isLoading = true);
@@ -130,14 +131,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Password
               TextField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
                 decoration: InputDecoration(
                   hintText: "Password",
                   hintStyle: PoppinsTextStyle.regular.copyWith(
                     color: Colors.grey[600],
                     fontSize: 13,
                   ),
-                  suffixIcon: const Icon(Icons.visibility),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                   filled: true,
                   fillColor: Colors.grey[200],
                   border: OutlineInputBorder(
@@ -146,6 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 40),
 
               // Tombol Register
