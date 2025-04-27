@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:attendify/pages/auth/screens/login/screens/login_screen.dart';
 import 'package:attendify/pages/check-in/screens/checkin_screen.dart';
 import 'package:attendify/pages/check-out/screens/checkout_screen.dart';
@@ -6,8 +9,6 @@ import 'package:attendify/pages/izin/screens/izin_screen.dart';
 import 'package:attendify/utils/constant/app_color.dart';
 import 'package:attendify/utils/constant/app_font.dart';
 import 'package:attendify/utils/constant/app_image.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,25 +18,56 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final DateTime now = DateTime.now();
+  late DateTime now;
+  Timer? _timer;
 
   final List<Map<String, dynamic>> features = [];
+  List<Map<String, dynamic>> filteredFeatures = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    now = DateTime.now();
+
     features.addAll([
-      {'title': 'Izin', 'icon': AppImage.iconIzin, 'screen': IzinScreen()},
-      {'title': 'Tugas', 'icon': AppImage.iconTugas, 'screen': null},
-      {'title': 'Lembur In', 'icon': AppImage.iconLemburin, 'screen': null},
-      {'title': 'Lembur Out', 'icon': AppImage.iconLemburout, 'screen': null},
-      {'title': 'Cek Absen', 'icon': AppImage.iconCekabsen, 'screen': null},
+      {'title': 'Check In', 'icon': AppImage.checkin, 'screen': const CheckinScreen()},
+      {'title': 'Check Out', 'icon': AppImage.checkout, 'screen': const CheckoutScreen()},
+      {'title': 'History', 'icon': AppImage.iconLemburin, 'screen': const HistoryScreen()},
+      {'title': 'Izin', 'icon': AppImage.iconIzin, 'screen': const IzinScreen()},
     ]);
+
+    filteredFeatures = List.from(features);
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        now = DateTime.now();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterFeatures(String query) {
+    final filtered = features.where((feature) {
+      final titleLower = feature['title'].toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
+
+    setState(() {
+      filteredFeatures = filtered;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime = DateFormat('hh:mm a').format(now);
+    String formattedTime = DateFormat('hh:mm:ss a').format(now);
     String formattedDate = DateFormat('E, dd MMMM yyyy').format(now);
 
     return Scaffold(
@@ -43,22 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: AppColor.backgroundColor,
         elevation: 0,
-
         title: Text(
           'Attendify',
-          style: PoppinsTextStyle.bold.copyWith(
-            fontSize: 20,
-            color: Colors.black,
-          ),
+          style: PoppinsTextStyle.bold.copyWith(fontSize: 20, color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          ),
         ),
         actions: [
           Container(
@@ -74,49 +101,44 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   _buildSearchBox(),
                   const SizedBox(height: 24),
-                  _buildLiveAttendance(context, formattedTime, formattedDate),
+                  _buildLiveAttendance(formattedTime, formattedDate),
                   const SizedBox(height: 16),
-                  _buildCheckButtons(context),
+                  _buildCheckButtons(),
                 ],
               ),
             ),
-
-            // Fitur Lainnya
             _buildSectionTitle("Lainnya"),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SizedBox(
                 height: 120,
-                child: ListView.builder(
+                child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: features.length,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredFeatures.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 20),
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (features[index]['screen'] != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => features[index]['screen'],
-                              ),
-                            );
-                          }
-                        },
-                        child: SizedBox(
-                          width: 80,
-                          child: _buildFeatureItem(
-                            features[index]['title'],
-                            features[index]['icon'],
-                          ),
+                    return GestureDetector(
+                      onTap: () {
+                        if (filteredFeatures[index]['screen'] != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => filteredFeatures[index]['screen']),
+                          );
+                        }
+                      },
+                      child: SizedBox(
+                        width: 80,
+                        child: _buildFeatureItem(
+                          filteredFeatures[index]['title'],
+                          filteredFeatures[index]['icon'],
                         ),
                       ),
                     );
@@ -124,8 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
-            // Berita
             _buildSectionTitle("Berita"),
             _buildNewsSection(),
             const SizedBox(height: 32),
@@ -139,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
         children: [
@@ -148,8 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
+              controller: _searchController,
+              onChanged: _filterFeatures,
               decoration: InputDecoration(
-                hintText: 'search in here',
+                hintText: 'Search in here...',
                 hintStyle: PoppinsTextStyle.regular.copyWith(
                   color: Colors.grey[600],
                   fontSize: 13,
@@ -163,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildLiveAttendance(BuildContext context, String time, String date) {
+  Widget _buildLiveAttendance(String time, String date) {
     return Column(
       children: [
         Stack(
@@ -179,10 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HistoryScreen()),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryScreen()));
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(4),
@@ -192,7 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-
         Center(
           child: Text(
             time,
@@ -202,56 +220,45 @@ class _HomeScreenState extends State<HomeScreen> {
         Center(
           child: Text(
             date,
-            style: PoppinsTextStyle.regular.copyWith(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: PoppinsTextStyle.regular.copyWith(fontSize: 14, color: Colors.grey[600]),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCheckButtons(BuildContext context) {
+  Widget _buildCheckButtons() {
     return Row(
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CheckinScreen()),
-                ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CheckinScreen()),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.secondaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            child: Text(
-              "Check in",
-              style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white),
-            ),
+            child: Text("Check In", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: ElevatedButton(
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CheckoutScreen()),
-                ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CheckoutScreen()),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepOrange,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            child: Text(
-              "Check out",
-              style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white),
-            ),
+            child: Text("Check Out", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
           ),
         ),
       ],
@@ -279,9 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Image.asset(
             iconAsset,
             fit: BoxFit.contain,
-            errorBuilder:
-                (context, error, stackTrace) =>
-                    Icon(_getIconForTitle(title), size: 40, color: Colors.grey),
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.image, size: 40, color: Colors.grey),
           ),
         ),
         const SizedBox(height: 4),
@@ -296,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -309,38 +315,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildNewsSection() {
     List<Map<String, String>> newsItems = [
-      {
-        'title': 'Berita seputar virus Corona Hari ini',
-        'time': '2 jam yang lalu',
-      },
-      {
-        'title': 'Berita seputar sidang DPR Hari ini',
-        'time': '2 jam yang lalu',
-      },
-      {
-        'title': 'Update terbaru kebijakan perusahaan',
-        'time': '3 jam yang lalu',
-      },
-      {
-        'title': 'Perubahan jadwal kerja mulai bulan depan',
-        'time': '4 jam yang lalu',
-      },
+      {'title': 'Berita seputar virus Corona Hari ini', 'time': '2 jam yang lalu'},
+      {'title': 'Berita seputar sidang DPR Hari ini', 'time': '2 jam yang lalu'},
+      {'title': 'Update terbaru kebijakan perusahaan', 'time': '3 jam yang lalu'},
+      {'title': 'Perubahan jadwal kerja mulai bulan depan', 'time': '4 jam yang lalu'},
     ];
 
     return SizedBox(
       height: 150,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: newsItems.length,
         itemBuilder: (context, index) {
           return Container(
             width: MediaQuery.of(context).size.width * 0.7,
             margin: const EdgeInsets.only(right: 16),
-            child: _buildNewsCard(
-              newsItems[index]['title']!,
-              newsItems[index]['time']!,
-            ),
+            child: _buildNewsCard(newsItems[index]['title']!, newsItems[index]['time']!),
           );
         },
       ),
@@ -363,62 +356,36 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Stack(
         children: [
-          Center(
-            child: Row(
-              children: [
-                Image.asset(
-                  AppImage.iconBerita,
-                  width: 80,
-                  height: 80,
-                  errorBuilder:
-                      (_, __, ___) => const Icon(
-                        Icons.article,
-                        size: 40,
-                        color: Colors.grey,
-                      ),
+          Row(
+            children: [
+              Image.asset(
+                AppImage.iconBerita,
+                width: 80,
+                height: 80,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.article, size: 40, color: Colors.grey),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: PoppinsTextStyle.bold.copyWith(fontSize: 14),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: PoppinsTextStyle.bold.copyWith(fontSize: 14),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           Positioned(
             top: 6,
             right: 0,
             child: Text(
               time,
-              style: PoppinsTextStyle.regular.copyWith(
-                fontSize: 11,
-                color: Colors.grey,
-              ),
+              style: PoppinsTextStyle.regular.copyWith(fontSize: 11, color: Colors.grey),
             ),
           ),
         ],
       ),
     );
-  }
-
-  IconData _getIconForTitle(String title) {
-    switch (title) {
-      case 'Izin':
-        return Icons.person;
-      case 'Tugas':
-        return Icons.assignment;
-      case 'Lembur In':
-        return Icons.access_time;
-      case 'Lembur Out':
-        return Icons.exit_to_app;
-      case 'Cek Absen':
-        return Icons.checklist;
-      default:
-        return Icons.apps;
-    }
   }
 }

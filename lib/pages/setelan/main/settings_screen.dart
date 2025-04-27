@@ -1,4 +1,10 @@
 import 'package:attendify/pages/auth/service/auth_service.dart';
+import 'package:attendify/pages/setelan/screens/about_attendify_screen.dart';
+import 'package:attendify/pages/setelan/screens/app_version_screen.dart';
+import 'package:attendify/pages/setelan/screens/help_screen.dart';
+import 'package:attendify/pages/setelan/screens/privacy_policy_screen.dart';
+import 'package:attendify/pages/setelan/screens/privacy_security_screen.dart';
+import 'package:attendify/pages/setelan/screens/profile_screen.dart';
 import 'package:attendify/utils/constant/app_image.dart';
 import 'package:flutter/material.dart';
 import 'package:attendify/utils/constant/app_color.dart';
@@ -287,22 +293,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSettingItem(
                 icon: Icons.person,
                 title: "Akun Saya",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ProfileScreen()),
+                  );
+                },
               ),
+
               _buildSettingItem(
                 icon: Icons.lock_outline,
                 title: "Privasi & Keamanan",
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                icon: Icons.notifications_none_rounded,
-                title: "Notifikasi",
-                onTap: () {},
+                onTap: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PrivacySecurityScreen()),
+                  );
+                },
               ),
               _buildSettingItem(
                 icon: Icons.help_outline_rounded,
                 title: "Bantuan",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => HelpScreen()),
+                  );
+                },
                 showDivider: false,
               ),
             ]),
@@ -311,17 +328,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSettingItem(
                 icon: Icons.info_outline_rounded,
                 title: "Tentang Attendify",
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AboutAttendifyScreen()),
+                  );
+                },
               ),
               _buildSettingItem(
                 icon: Icons.star_border_rounded,
-                title: "Beri Rating",
-                onTap: () {},
+                title: "Versi Aplikasi",
+                onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => VersionScreen()),
+                  );
+                },
               ),
               _buildSettingItem(
                 icon: Icons.policy_outlined,
                 title: "Kebijakan Privasi",
-                onTap: () {},
+                onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PrivacyPolicyScreen()),
+                  );
+                },
                 showDivider: false,
               ),
             ]),

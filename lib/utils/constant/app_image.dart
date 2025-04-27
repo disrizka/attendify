@@ -14,4 +14,6 @@ class AppImage {
   static const String iconCekabsen = 'assets/images/cekabsen.png';
   static const String historyImage = 'assets/images/motorhistory.png';
   static const String iconBerita = 'assets/images/Wind.png';
+  static const String checkin = 'assets/images/check-in.png';
+  static const String checkout = 'assets/images/check-out.png';
 }

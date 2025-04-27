@@ -67,6 +67,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  
+
   Future<void> _deleteAbsen(int? absenId) async {
     if (absenId == null) return;
     final token = await PreferenceHandler.getToken();
@@ -104,25 +106,46 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
     );
 
-    if (confirm == true) {
-      try {
-        final res = await AuthService().deleteAbsen(
-          absenId: absenId,
-          token: token,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(res.message ?? 'Tidak ada pesan')),
-        );
+   if (confirm == true) {
+  try {
+    final res = await AuthService().deleteAbsen(
+      absenId: absenId,
+      token: token,
+    );
 
-        await fetchHistory();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-        );
-      }
-    }
+    _showElegantSnackBar(res.message ?? 'Berhasil menghapus absen'); // ✅ pakai elegant snackbar
+    await fetchHistory();
+  } catch (e) {
+    _showElegantSnackBar(e.toString().replaceFirst('Exception: ', '')); // ✅ pakai elegant snackbar
   }
+}
 
+
+    
+  }
+void _showElegantSnackBar(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Colors.white),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.black87,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      duration: const Duration(seconds: 3),
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,6 +214,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildHistoryItem(Datum item) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (item.checkIn != null && item.status == 'masuk')
           _buildItemRow(
@@ -198,6 +222,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             iconColor: Colors.green,
             label: 'Check In',
             time: _formatTime(item.checkIn),
+            address: item.checkInAddress ?? "-",
             id: item.id,
           ),
         if (item.checkOut != null)
@@ -206,6 +231,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             iconColor: Colors.red,
             label: 'Check Out',
             time: _formatTime(item.checkOut),
+            address: item.checkOutAddress ?? "-",
             id: item.id,
           ),
         if (item.status == 'izin')
@@ -214,6 +240,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             iconColor: Colors.orange,
             label: 'Izin',
             time: item.alasanIzin ?? "-",
+            address:
+                item.checkInAddress ??
+                "-", // biasanya izin juga ada lokasi izin
             id: item.id,
           ),
       ],
@@ -225,11 +254,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
     required Color iconColor,
     required String label,
     required String time,
+    required String address,
     required int? id,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // supaya jam dan alamat bisa vertikal
         children: [
           Container(
             width: 40,
@@ -256,6 +288,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   time,
                   style: PoppinsTextStyle.regular.copyWith(
                     fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  address,
+                  maxLines: 2,
+                  style: PoppinsTextStyle.regular.copyWith(
+                    fontSize: 11,
                     color: Colors.grey,
                   ),
                 ),

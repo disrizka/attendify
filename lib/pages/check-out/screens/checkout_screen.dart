@@ -74,42 +74,38 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     await _geolocatorPlatform.openLocationSettings();
   }
 
-  Future<void> _handleCheckout() async {
-    final userId = await PreferenceHandler.getId();
-    final token = await PreferenceHandler.getToken();
-    print("User ID dari session: $userId");
-    if (userId == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("User belum login")));
-      return;
-    }
+ Future<void> _handleCheckout() async {
+  final userId = await PreferenceHandler.getId();
+  final token = await PreferenceHandler.getToken();
+  print("User ID dari session: $userId");
 
-    try {
-      final response = await AuthService().checkout(
-        lat: _currentLat,
-        lng: _currentLong,
-        address: _currentAddress,
-        token: token,
-      );
-
-      print("RESPON DARI API: $response");
-      final message = response['message'] ?? "Check-in gagal";
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-
-      if (message.toLowerCase().contains("berhasil")) {
-        Navigator.pop(context, true);
-      }
-    } catch (e) {
-      print("EXCEPTION: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceAll("Exception: ", ""))),
-      );
-    }
+  if (userId == null) {
+    _showElegantSnackBar("User belum login");
+    return;
   }
+
+  try {
+    final response = await AuthService().checkout(
+      lat: _currentLat,
+      lng: _currentLong,
+      address: _currentAddress,
+      token: token,
+    );
+
+    print("RESPON DARI API: $response");
+    final message = response['message'] ?? "Check-out gagal";
+
+    _showElegantSnackBar(message);
+
+    if (message.toLowerCase().contains("berhasil")) {
+      Navigator.pop(context, true);
+    }
+  } catch (e) {
+    print("EXCEPTION: $e");
+    _showElegantSnackBar(e.toString().replaceAll("Exception: ", ""));
+  }
+}
+
 
   PopupMenuButton _createActions() {
     return PopupMenuButton(
@@ -130,6 +126,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
+void _showElegantSnackBar(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Colors.white),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.black87,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      duration: const Duration(seconds: 3),
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
