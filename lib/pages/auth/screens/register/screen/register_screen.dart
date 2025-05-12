@@ -39,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LoginScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     } catch (e) {
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
@@ -51,13 +51,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  // Helper untuk menampilkan SnackBar dengan gaya elegan
   void _showElegantSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.white),
+            const Icon(Icons.info_outline, color: Colors.white),
             const SizedBox(width: 10),
             Expanded(
               child: Text(message, style: const TextStyle(color: Colors.white)),
@@ -85,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 60),
               Text(
-                "Hallo! Register \nto opened",
+                "Halo! Daftar\nuntuk mulai",
                 style: PoppinsTextStyle.bold.copyWith(fontSize: 30),
               ),
               const SizedBox(height: 20),
@@ -133,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
-                  hintText: "Password",
+                  hintText: "Kata Sandi",
                   hintStyle: PoppinsTextStyle.regular.copyWith(
                     color: Colors.grey[600],
                     fontSize: 13,
@@ -173,13 +172,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 onPressed: _isLoading ? null : _handleRegister,
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator()
-                        : Text(
-                          "Register",
-                          style: PoppinsTextStyle.bold.copyWith(fontSize: 16),
-                        ),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : Text(
+                        "Daftar",
+                        style: PoppinsTextStyle.bold.copyWith(fontSize: 16),
+                      ),
               ),
               const SizedBox(height: 20),
 
@@ -190,7 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
-                      "Or login with",
+                      "Atau masuk dengan",
                       style: PoppinsTextStyle.regular.copyWith(
                         color: Colors.grey[600],
                         fontSize: 13,
@@ -232,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Do have an account? ",
+                    "Sudah punya akun? ",
                     style: PoppinsTextStyle.regular.copyWith(
                       color: Colors.grey[600],
                       fontSize: 13,
@@ -242,11 +240,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                       );
                     },
                     child: Text(
-                      "Login here",
+                      "Masuk di sini",
                       style: PoppinsTextStyle.bold.copyWith(
                         color: AppColor.tertiaryColor,
                         fontSize: 13,

@@ -18,7 +18,7 @@ class AboutAttendifyScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Tentang Attendify",
+          "Tentang Presind",
           style: PoppinsTextStyle.bold.copyWith(
             fontSize: 20,
             color: Colors.black,
@@ -31,7 +31,7 @@ class AboutAttendifyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Selamat Datang di Attendify!",
+              "Selamat Datang \ndi Presind!",
               style: PoppinsTextStyle.bold.copyWith(
                 fontSize: 24,
                 color: Colors.black,
@@ -39,7 +39,7 @@ class AboutAttendifyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Attendify adalah solusi modern untuk manajemen absensi yang cepat, akurat, dan aman. "
+              "Presind adalah solusi modern untuk manajemen absensi yang cepat, akurat, dan aman. "
               "Kami berkomitmen untuk memberikan pengalaman terbaik bagi pengguna dalam mencatat kehadiran, izin, dan laporan riwayat absensi.",
               style: PoppinsTextStyle.regular.copyWith(
                 fontSize: 14,

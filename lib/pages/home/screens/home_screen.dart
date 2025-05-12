@@ -31,10 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
     now = DateTime.now();
 
     features.addAll([
-      {'title': 'Check In', 'icon': AppImage.checkin, 'screen': const CheckinScreen()},
-      {'title': 'Check Out', 'icon': AppImage.checkout, 'screen': const CheckoutScreen()},
-      {'title': 'History', 'icon': AppImage.iconLemburin, 'screen': const HistoryScreen()},
-      {'title': 'Izin', 'icon': AppImage.iconIzin, 'screen': const IzinScreen()},
+      {'title': 'Absen Masuk', 'icon': AppImage.checkin, 'screen': const CheckinScreen()},
+      {'title': 'Absen Pulang', 'icon': AppImage.checkout, 'screen': const CheckoutScreen()},
+      {'title': 'Riwayat', 'icon': AppImage.iconLemburin, 'screen': const HistoryScreen()},
+      {'title': 'Ajukan Izin', 'icon': AppImage.iconIzin, 'screen': const IzinScreen()},
     ]);
 
     filteredFeatures = List.from(features);
@@ -67,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime = DateFormat('hh:mm:ss a').format(now);
-    String formattedDate = DateFormat('E, dd MMMM yyyy').format(now);
+    String formattedTime = DateFormat('HH:mm:ss').format(now);
+    String formattedDate = DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(now);
 
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColor.backgroundColor,
         elevation: 0,
         title: Text(
-          'Attendify',
+          'Presind',
           style: PoppinsTextStyle.bold.copyWith(fontSize: 20, color: Colors.black),
         ),
         centerTitle: true,
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _searchController,
               onChanged: _filterFeatures,
               decoration: InputDecoration(
-                hintText: 'Search in here...',
+                hintText: 'Cari fitur di sini...',
                 hintStyle: PoppinsTextStyle.regular.copyWith(
                   color: Colors.grey[600],
                   fontSize: 13,
@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Live Attendance',
+                'Presensi Langsung',
                 style: PoppinsTextStyle.semiBold.copyWith(fontSize: 16),
               ),
             ),
@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            child: Text("Check In", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
+            child: Text("Absen Masuk", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
           ),
         ),
         const SizedBox(width: 16),
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            child: Text("Check Out", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
+            child: Text("Absen Pulang", style: PoppinsTextStyle.semiBold.copyWith(color: Colors.white)),
           ),
         ),
       ],
@@ -319,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {'title': 'Berita seputar sidang DPR Hari ini', 'time': '2 jam yang lalu'},
       {'title': 'Update terbaru kebijakan perusahaan', 'time': '3 jam yang lalu'},
       {'title': 'Perubahan jadwal kerja mulai bulan depan', 'time': '4 jam yang lalu'},
+      {'title': 'Tambahan berita penting hari ini', 'time': '4 jam yang lalu'},
     ];
 
     return SizedBox(

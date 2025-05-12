@@ -40,7 +40,7 @@ class VersionScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Attendify",
+                  "Presind",
                   style: PoppinsTextStyle.bold.copyWith(fontSize: 22),
                 ),
                 const SizedBox(height: 8),
@@ -55,7 +55,7 @@ class VersionScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Terima kasih telah menggunakan Attendify untuk mencatat absensi Anda dengan lebih mudah dan aman.",
+                  "Terima kasih telah menggunakan Presind untuk mencatat absensi Anda dengan lebih mudah dan aman.",
                   textAlign: TextAlign.center,
                   style: PoppinsTextStyle.regular.copyWith(fontSize: 14, color: Colors.black87),
                 ),

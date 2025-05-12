@@ -1,5 +1,5 @@
 class AppImage {
-  static const String logo = 'assets/images/attendify.png';
+  static const String logo = 'assets/images/presind.png';
   static const String facebook = 'assets/images/Facebook.png';
   static const String google = 'assets/images/google.png';
   static const String apple = 'assets/images/Apple.png';

@@ -296,7 +296,7 @@ class _IzinScreenState extends State<IzinScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.send_rounded),
+            const Icon(Icons.send_rounded, color: AppColor.backgroundColor,),
             const SizedBox(width: 10),
             Text(
               "Kirim Pengajuan",

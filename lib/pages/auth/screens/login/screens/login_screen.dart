@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
         print("\u2705 User ID disimpan: \${response.data!.user!.id!}");
       }
 
-      _showElegantSnackBar(response.message ?? "Login berhasil.");
+      _showElegantSnackBar(response.message ?? "Masuk berhasil.");
 
       Navigator.pushReplacement(
         context,
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Welcome back \nagain! Attendify \nto see you, Again!",
+                   "Asik! Kamu balik lagi.\nYuk, mulai harimu\nbareng Presind.",
                     textAlign: TextAlign.left,
                     style: PoppinsTextStyle.bold.copyWith(fontSize: 30),
                   ),
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _isLoading
                             ? CircularProgressIndicator(color: Colors.white)
                             : Text(
-                              "Login",
+                              "Masuk",
                               style: PoppinsTextStyle.bold.copyWith(
                                 fontSize: 16,
                               ),
@@ -194,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          "Or login with",
+                          "Atau masuk dengan",
                           style: PoppinsTextStyle.regular.copyWith(
                             color: Colors.grey[600],
                             fontSize: 13,
@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        "Belum punya akun? ",
                         style: PoppinsTextStyle.regular.copyWith(
                           color: Colors.grey[600],
                           fontSize: 13,
@@ -246,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: Text(
-                          "Register here",
+                          "Daftar disini",
                           style: PoppinsTextStyle.bold.copyWith(
                             color: AppColor.tertiaryColor,
                             fontSize: 13,

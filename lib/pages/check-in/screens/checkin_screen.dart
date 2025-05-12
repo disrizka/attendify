@@ -73,79 +73,78 @@ class _CheckinScreenState extends State<CheckinScreen> {
   void _openLocationSettings() async {
     await _geolocatorPlatform.openLocationSettings();
   }
-Future<void> _handleCheckin() async {
-  final userId = await PreferenceHandler.getId();
-  final token = await PreferenceHandler.getToken();
-  print("User ID dari session: $userId");
 
-  if (userId == null) {
-    _showElegantSnackBar("User belum login");
-    return;
-  }
+  Future<void> _handleCheckin() async {
+    final userId = await PreferenceHandler.getId();
+    final token = await PreferenceHandler.getToken();
+    print("User ID dari session: $userId");
 
-  try {
-    final response = await AuthService().checkin(
-      lat: _currentLat,
-      lng: _currentLong,
-      address: _currentAddress,
-      token: token,
-    );
-
-    print("RESPON DARI API: $response");
-    final message = response['message'] ?? "Check-in gagal";
-
-    _showElegantSnackBar(message);
-
-    if (message.toLowerCase().contains("berhasil")) {
-      Navigator.pop(context, true);
+    if (userId == null) {
+      _showElegantSnackBar("User belum login");
+      return;
     }
-  } catch (e) {
-    print("EXCEPTION: $e");
-    _showElegantSnackBar(e.toString().replaceAll("Exception: ", ""));
+
+    try {
+      final response = await AuthService().checkin(
+        lat: _currentLat,
+        lng: _currentLong,
+        address: _currentAddress,
+        token: token,
+      );
+
+      print("RESPON DARI API: $response");
+      final message = response['message'] ?? "Check-in gagal";
+
+      _showElegantSnackBar(message);
+
+      if (message.toLowerCase().contains("berhasil")) {
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      print("EXCEPTION: $e");
+      _showElegantSnackBar(e.toString().replaceAll("Exception: ", ""));
+    }
   }
-}
 
-PopupMenuButton<int> _createActions() {
-  return PopupMenuButton<int>(
-    elevation: 40,
-    onSelected: (value) {
-      if (value == 1) _openAppSettings();
-      if (value == 2) _openLocationSettings();
-    },
-    itemBuilder: (context) => [
-      const PopupMenuItem(value: 1, child: Text("Open App Settings")),
-      if (Platform.isAndroid || Platform.isWindows)
-        const PopupMenuItem(
-          value: 2,
-          child: Text("Open Location Settings"),
-        ),
-    ],
-  );
-}
+  PopupMenuButton<int> _createActions() {
+    return PopupMenuButton<int>(
+      elevation: 40,
+      onSelected: (value) {
+        if (value == 1) _openAppSettings();
+        if (value == 2) _openLocationSettings();
+      },
+      itemBuilder:
+          (context) => [
+            const PopupMenuItem(value: 1, child: Text("Open App Settings")),
+            if (Platform.isAndroid || Platform.isWindows)
+              const PopupMenuItem(
+                value: 2,
+                child: Text("Open Location Settings"),
+              ),
+          ],
+    );
+  }
 
-void _showElegantSnackBar(String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Row(
-        children: [
-          const Icon(Icons.info_outline, color: Colors.white),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white),
+  void _showElegantSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.info_outline, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(message, style: const TextStyle(color: Colors.white)),
             ),
-          ),
-        ],
+          ],
+        ),
+        backgroundColor: Colors.black87,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        duration: const Duration(seconds: 3),
       ),
-      backgroundColor: Colors.black87,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      duration: const Duration(seconds: 3),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +241,7 @@ void _showElegantSnackBar(String message) {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "Check In",
+                            "Absen Masuk",
                             style: PoppinsTextStyle.bold.copyWith(
                               fontSize: 20,
                               color: AppColor.primaryColor,
@@ -283,7 +282,7 @@ void _showElegantSnackBar(String message) {
                               ),
                               onPressed: _handleCheckin,
                               child: Text(
-                                "Go",
+                                "Mulai",
                                 style: PoppinsTextStyle.semiBold.copyWith(
                                   fontSize: 20,
                                   color: AppColor.backgroundColor,

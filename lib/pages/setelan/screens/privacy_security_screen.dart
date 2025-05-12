@@ -19,7 +19,10 @@ class PrivacySecurityScreen extends StatelessWidget {
         ),
         title: Text(
           "Privasi & Keamanan",
-          style: PoppinsTextStyle.bold.copyWith(fontSize: 20, color: Colors.black),
+          style: PoppinsTextStyle.bold.copyWith(
+            fontSize: 20,
+            color: Colors.black,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -36,7 +39,7 @@ class PrivacySecurityScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Kami berkomitmen menjaga kerahasiaan dan keamanan data Anda saat menggunakan aplikasi Attendify.",
+              "Kami berkomitmen menjaga kerahasiaan dan keamanan data Anda saat menggunakan aplikasi Presind.",
               style: PoppinsTextStyle.regular.copyWith(
                 fontSize: 14,
                 color: Colors.grey[700],
@@ -45,7 +48,8 @@ class PrivacySecurityScreen extends StatelessWidget {
             const SizedBox(height: 24),
             _buildInfoCard(
               title: "Kebijakan Privasi",
-              description: "Kami menghargai privasi Anda. Data Anda disimpan dengan aman "
+              description:
+                  "Kami menghargai privasi Anda. Data Anda disimpan dengan aman "
                   "dan tidak akan dibagikan kepada pihak ketiga tanpa persetujuan Anda.",
               icon: Icons.privacy_tip_outlined,
               iconColor: Colors.blueAccent,
@@ -53,7 +57,8 @@ class PrivacySecurityScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildInfoCard(
               title: "Keamanan Data",
-              description: "Semua data absensi dan informasi akun Anda dienkripsi dan hanya dapat diakses oleh Anda. "
+              description:
+                  "Semua data absensi dan informasi akun Anda dienkripsi dan hanya dapat diakses oleh Anda. "
                   "Kami menggunakan teknologi terbaru untuk melindungi sistem dari akses tidak sah.",
               icon: Icons.security_outlined,
               iconColor: Colors.green,
@@ -61,7 +66,8 @@ class PrivacySecurityScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildInfoCard(
               title: "Kontrol Pengguna",
-              description: "Anda memiliki kendali penuh atas akun Anda. "
+              description:
+                  "Anda memiliki kendali penuh atas akun Anda. "
                   "Perbarui informasi atau hapus akun Anda kapan saja melalui pengaturan.",
               icon: Icons.manage_accounts_outlined,
               iconColor: Colors.orange,

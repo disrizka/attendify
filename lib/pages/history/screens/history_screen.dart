@@ -154,7 +154,7 @@ void _showElegantSnackBar(String message) {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          'History',
+          'Riwayat',
           style: PoppinsTextStyle.bold.copyWith(
             fontSize: 20,
             color: Colors.black,
@@ -220,7 +220,7 @@ void _showElegantSnackBar(String message) {
           _buildItemRow(
             icon: Icons.login,
             iconColor: Colors.green,
-            label: 'Check In',
+            label: 'Absen Masuk',
             time: _formatTime(item.checkIn),
             address: item.checkInAddress ?? "-",
             id: item.id,
@@ -229,7 +229,7 @@ void _showElegantSnackBar(String message) {
           _buildItemRow(
             icon: Icons.logout,
             iconColor: Colors.red,
-            label: 'Check Out',
+            label: 'Absen Keluar',
             time: _formatTime(item.checkOut),
             address: item.checkOutAddress ?? "-",
             id: item.id,

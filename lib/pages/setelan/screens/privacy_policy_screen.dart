@@ -31,7 +31,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Kebijakan Privasi Attendify",
+              "Kebijakan Privasi Presind",
               style: PoppinsTextStyle.bold.copyWith(
                 fontSize: 24,
                 color: Colors.black,
@@ -39,7 +39,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Kami menghargai privasi Anda. Halaman ini menjelaskan bagaimana kami mengelola dan melindungi informasi pribadi Anda di aplikasi Attendify.",
+              "Kami menghargai privasi Anda. Halaman ini menjelaskan bagaimana kami mengelola dan melindungi informasi pribadi Anda di aplikasi Presind.",
               style: PoppinsTextStyle.regular.copyWith(
                 fontSize: 14,
                 color: Colors.grey[700],

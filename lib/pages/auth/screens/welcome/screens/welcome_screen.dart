@@ -42,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "Register",
+                        "Daftar",
                         style: PoppinsTextStyle.bold.copyWith(fontSize: 16),
                       ),
                     ),
@@ -67,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "Login",
+                        "Masuk",
                         style: PoppinsTextStyle.bold.copyWith(fontSize: 16),
                       ),
                     ),

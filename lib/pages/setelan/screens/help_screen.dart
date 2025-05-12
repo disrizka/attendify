@@ -36,7 +36,7 @@ class HelpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Kami siap membantu Anda menyelesaikan masalah atau memahami aplikasi Attendify lebih baik.",
+              "Kami siap membantu Anda menyelesaikan masalah atau memahami aplikasi Presind lebih baik.",
               style: PoppinsTextStyle.regular.copyWith(
                 fontSize: 14,
                 color: Colors.grey[700],

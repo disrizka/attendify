@@ -225,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Settings",
+          "Pengaturan",
           style: PoppinsTextStyle.bold.copyWith(
             fontSize: 20,
             color: Colors.black,
@@ -327,7 +327,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSection("Tentang Aplikasi", [
               _buildSettingItem(
                 icon: Icons.info_outline_rounded,
-                title: "Tentang Attendify",
+                title: "Tentang Presind",
                 onTap: () {
                   Navigator.push(
                     context,
@@ -371,7 +371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () => _signOut(context),
               icon: Icon(Icons.logout, color: AppColor.backgroundColor),
               label: Text(
-                "Sign Out",
+                "Keluar",
                 style: PoppinsTextStyle.semiBold.copyWith(fontSize: 16),
               ),
             ),
